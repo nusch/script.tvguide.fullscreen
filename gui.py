@@ -604,7 +604,9 @@ class TVGuide(xbmcgui.WindowXML):
             url = url.replace("%D",str(minutes))
             url = url.replace("%y",str(year))
             if "%B" in url:
-                imdb = self.getIMDBId(name,year)
+                #imdb = self.getIMDBId(name,year)
+                #imdb = self.getOMDBId(name,year)
+                imdb = self.getOMDBId(name,name,year,program.season,program.episode)
                 if imdb:
                     url = url.replace("%B",imdb)
             if "%V" in url:
@@ -2525,7 +2527,27 @@ class TVGuide(xbmcgui.WindowXML):
         if img:
             return img
 
-
+    def getOMDBId(self,program_title,title,year,season,episode):
+        if year:
+            url = 'http://www.omdbapi.com/?t=%s&y=%s&plot=short&r=json&type=movie' % (urllib.quote_plus(title),year)
+        elif season and episode:
+            url = 'http://www.omdbapi.com/?t=%s&y=&plot=short&r=json&type=episode&Season=%s&Episode=%s' % (urllib.quote_plus(title),season,episode)
+        else:
+            url = 'http://www.omdbapi.com/?t=%s&y=&plot=short&r=json' % urllib.quote_plus(title)
+        log(url)
+        try: 
+            data = requests.get(url).content
+            log(data)
+        except: return
+        try:
+            j = json.loads(data)
+        except:
+            return
+        if j['Response'] == 'False':
+            return
+        log(j)
+            
+            
     def getTVDBImage(self, title, season, episode, load=True):
         orig_title = title
         try: title = title.encode("utf8")
