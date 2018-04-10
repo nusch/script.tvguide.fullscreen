@@ -2068,7 +2068,7 @@ class XMLTVSource(Source):
                         cid = id_shortcuts[channel]
                     else:
                         cid = channel
-                    result = Program(cid, title, sub_title, self.parseXMLTVDate(elem.get('start')) + datetime.timedelta(minutes=time_offset),
+                    result = Program(cid.decode("utf8"), title, sub_title, self.parseXMLTVDate(elem.get('start')) + datetime.timedelta(minutes=time_offset),
                                      self.parseXMLTVDate(elem.get('stop'))+ datetime.timedelta(minutes=time_offset), description, categories, imageSmall=icon,
                                      season = season, episode = episode, is_movie = is_movie, language= language)
 
@@ -2120,7 +2120,7 @@ class XMLTVSource(Source):
                         visible = True
                     if cid in id_shortcuts:
                         cid = id_shortcuts[cid]
-                    result = Channel(cid, title, '', logo, streamUrl, visible)
+                    result = Channel(cid.decode("utf8"), title.decode("utf8"), '', logo, streamUrl, visible)
                     channel = title
 
                 if result:
